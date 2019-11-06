@@ -1,0 +1,19 @@
+{
+  "name": "Sensor-Visualizer",
+  "version": "1.0.0",
+  "description": "Tool for visualizing sensor data",
+  "main": "index.js",
+  "author": "Dhvanil Shah",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon index.js",
+    "heroku-postbuild": "cd frontend && yarn && yarn run build",
+    "build": "cd frontend && yarn && yarn run build",
+    "dev": "cd frontend && yarn run start"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase-admin": "^8.7.0",
+    "nodemon": "^1.19.4"
+  }
+}

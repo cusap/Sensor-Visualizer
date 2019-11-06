@@ -1,0 +1,5 @@
+# Store Files
+.DS_Store
+
+# Secrets Folder 
+secrets/
