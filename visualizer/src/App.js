@@ -1,8 +1,10 @@
 import React from "react";
 import axios from "axios";
 import logo from "./logo.svg";
-import { Layout, Menu, Breadcrumb, Card, Row, Col } from "antd";
+import { Layout, Menu, Breadcrumb, Card, Row, Col, Button } from "antd";
 import "./App.css";
+
+const IP = "192.168.0.181:3000";
 
 const { Header, Content, Footer } = Layout;
 
@@ -10,17 +12,28 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { env: null, data: null };
+    this.reload = this.reload.bind(this);
   }
 
-  componentDidMount = async () => {
-    const envToken = await localStorage.getItem("environment");
-    if (envToken) {
-      this.setState({ env: envToken });
-    }
+  reload = async () => {
     const response = await axios.get(
-      "http://localhost:3000/read/hdsnsFxV4rWaUSuqnARe"
+      "http://" + IP + "/read/hdsnsFxV4rWaUSuqnARe"
     );
     if (response.data) {
+      this.setState({ data: response.data });
+    }
+  };
+
+  componentDidMount = async () => {
+    // const envToken = await localStorage.getItem("environment");
+    // if (envToken) {
+    //   this.setState({ env: envToken });
+    // }
+    const response = await axios.get(
+      "http://" + IP + "/read/hdsnsFxV4rWaUSuqnARe"
+    );
+    if (response.data) {
+      console.log(response.data);
       this.setState({ data: response.data });
     }
   };
@@ -40,6 +53,7 @@ class App extends React.Component {
           ></Menu>
         </Header>
         <Content style={{ padding: "50px 50px" }}>
+          <Button onClick={() => this.reload()}>Reload</Button>
           <div style={{ background: "#fff", padding: 24, minHeight: 500 }}>
             <Row>
               {data ? (

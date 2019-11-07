@@ -1,4 +1,5 @@
 const express = require("express");
+var cors = require("cors");
 var admin = require("firebase-admin");
 
 var serviceAccount = require("./secrets/eid101-hydroponics-firebase-adminsdk-hzewo-dd144c511b.json");
@@ -11,6 +12,15 @@ admin.initializeApp({
 var db = admin.firestore();
 const app = express();
 const port = 3000;
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 // DATABASES
 let environments = db.collection("environments");
@@ -53,11 +63,14 @@ app.get("/joinEnvironment/:name/secret/:secret", (req, res) => {
     .get()
     .then(snapshot => {
       if (snapshot.empty) {
-        throw new Error("Name is taken");
+        res.send("The Environment is Invalid");
+        // throw new Error("Name is taken");
       } else {
+        var key;
         snapshot.forEach(doc => {
-          res.send(doc.id);
+          key = doc.id;
         });
+        res.send(key);
       }
     })
     .catch(err => {
@@ -124,5 +137,7 @@ app.get("/read/:env", (req, res) => {
       console.log("Error getting documents", err);
     });
 });
+
+app.use(cors());
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
